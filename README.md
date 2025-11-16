@@ -1,16 +1,45 @@
-# React + Vite
+<h1 align="center">LocalSide On Ciledug Area</h1>
+<p align="center">
+Website ini menampilkan seluruh UMKM yang berada di Tanah Seratus dan Peninggilan untuk membantu mereka dikenal lebih luas oleh masyarakat.
+</p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## 🚀 Features
+- 📍 **Pencarian UMKM berdasarkan lokasi area Ciledug**
+- 🗂️ **Filter kategori UMKM** seperti kuliner, jasa, dan retail
+- 🏪 **Halaman profil UMKM** lengkap dengan foto, deskripsi, jam buka, dan lokasi Google Maps
+- 🗺️ **Integrasi peta interaktif** untuk melihat titik UMKM secara real-time
+- ❤️ **UI ramah pengguna** dengan tema kuning–hijau dan nuansa lokal
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📸 Preview
+*(Masukkan gambar/screenshoot halaman website di sini)*
+
+---
+
+## ⚙️ Installation
+
+```bash
+# Clone repository
+git clone https://github.com/username/repo-name.git
+
+# Masuk ke folder project
+cd repo-name
+
+# Install dependencies
+npm install
+
+# Run project
+npm run dev
+
