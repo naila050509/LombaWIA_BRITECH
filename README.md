@@ -1,16 +1,35 @@
-# React + Vite
+<h1 align="center">LocalSide On Ciledug Area</h1>
+<p align="center">Website ini menampilkan seluruh UMKM yang berada di tanah seratus serta peninggilan untuk memperkenalkan usaha usaha kecil mereka kepada seluruh pengguna media sosial</p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## 🚀 Features
+- 🌿 Farming kopi dari kebun virtual
+- 🏠 Coffee shop kustom
+- 🐦 Tambahan hewan di sekitar area
+- ☕ Pemrosesan biji kopi hingga jadi produk jadi
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🛠️ Tech Stack
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![HTML5](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📸 Preview
+![Website Preview](https://github.com/username/repo-name/assets/preview.gif)
+
+---
+
+## ⚙️ Installation
+```bash
+# Clone repository
+git clone https://github.com/username/repo-name.git
+
+# Masuk ke folder frontend
+npm run dev
+
