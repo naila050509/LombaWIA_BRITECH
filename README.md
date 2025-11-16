@@ -23,8 +23,8 @@ Website ini menampilkan seluruh UMKM yang berada di Tanah Seratus dan Peninggila
 
 ---
 
-## 📸 Preview
-*(Masukkan gambar/screenshoot halaman website di sini)*
+## 🚀 Live Demo
+👉 https://lomba-wia-britech-6m7f.vercel.app/
 
 ---
 
