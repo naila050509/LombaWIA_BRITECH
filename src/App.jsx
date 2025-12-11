@@ -23,7 +23,7 @@ import DetailUMKM from "./Detail_UMKM/Detail_Makanan";
 
 const App = () => {
   return (
-    <BrowserRouter basename="/LombaWIA_BRITECH">
+    <BrowserRouter>
       <Routes>
         {/* HALAMAN UTAMA */}
         <Route
