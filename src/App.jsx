@@ -38,6 +38,16 @@ const App = () => {
           }
         />
 
+        <Route path="/LombaWIA_BRITECH" element={
+          <main className="overflow-x-hidden bg-white text-dark">
+            <Hero />
+            <Highlight />
+            <Banner />
+            <Footer />
+          </main>
+        } />
+        {/* ⬆️ SAMPAI SINI */}
+
         {/* HALAMAN KATEGORI */}
         <Route
           path="/Makanan"
