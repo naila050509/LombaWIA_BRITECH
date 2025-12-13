@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Navbar from "../Navbar/Navbar";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import HeroJpg from "../../assets/Banner.png";

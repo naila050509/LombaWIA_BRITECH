@@ -1,76 +1,103 @@
-import React from "react";
-import BannerPng from "../../assets/Banner.png";
-import { GrUserExpert } from "react-icons/gr";
-import { MdOutlineAccessTime } from "react-icons/md";
-import { FaBookReader } from "react-icons/fa";
-import { FadeUp } from "../Hero/Hero";
-export { FadeUp };
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { FadeUp } from "../Hero/Hero";
 
 const Banner = () => {
+  const [activeTab, setActiveTab] = useState("peta");
+
   return (
-    <section>
-      <div className="container py-14 md:py-24 grid grid-cols-1 md:grid-cols-2 gap-8 space-y-6 md:space-y-0 items-center">
-        {/* Banner Image */}
-        <div className="flex justify-center items-center">
-          <motion.img
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-            src={BannerPng}
-            alt=""
-            className="w-[350px] md:max-w-[450px] object-cover drop-shadow rounded-3xl"
-          />
-        </div>
-        {/* Banner Image */}
-        <div className="flex flex-col justify-center">
-          <div className="text-center md:text-left space-y-12">
-            <motion.h1
-              initial={{ y: 30, scale: 0.5 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="text-3xl md:text-4xl font-bold !leading-snug"
+    <section className="bg-[#FFF9EF] py-20">
+      <div className="container mx-auto px-4 max-w-6xl">
+        {/* Header */}
+        <motion.div
+          variants={FadeUp(0.2)}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-6xl font-bold text-gray-800 mb-4">
+            Jelajahi <span className="text-orange-500">Pengalaman</span> Baru
+          </h2>
+          <p className="text-gray-600 text-lg">
+            Pilih fitur sesuai kebutuhanmu
+          </p>
+        </motion.div>
+
+        {/* Tabs */}
+        <div className="flex justify-center">
+          <div className="bg-white shadow-lg rounded-full p-2 flex gap-2">
+            <button
+              onClick={() => setActiveTab("peta")}
+              className={`px-6 py-3 rounded-full font-medium transition-all duration-300
+                ${
+                  activeTab === "peta"
+                    ? "bg-orange-500 text-white shadow-md"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
             >
-              Empowering Local Business Growth
-            </motion.h1>
-            <div>
-              <div className="flex flex-col gap-6">
-                <motion.div
-                  initial={FadeUp(0.2).initial}
-                  whileInView={FadeUp(0.2).animate}
-                  viewport={{ once: true }}
-                  className="flex items-center gap-4 p-6 bg-[#f4f4f4] rounded-2xl hover:bg-white duration-300 hover:shadow-2xl"
-                >
-                  <FaBookReader className="text-2xl" />
-                  <p className="text-lg">10.000+ Produk Lokal</p>
-                </motion.div>
-                <motion.div
-                  initial={FadeUp(0.2).initial}
-                  whileInView={FadeUp(0.2).animate}
-                  viewport={{ once: true }}
-                  className="flex items-center gap-4 p-6 bg-[#f4f4f4] rounded-2xl hover:bg-white duration-300 hover:shadow-2xl"
-                >
-                  <GrUserExpert className="text-2xl" />
-                  <p className="text-lg">Pelatihan & Mentoring</p>
-                </motion.div>
-                <motion.div
-                  initial={FadeUp(0.2).initial}
-                  whileInView={FadeUp(0.2).animate}
-                  viewport={{ once: true }}
-                  className="flex items-center gap-4 p-6 bg-[#f4f4f4] rounded-2xl hover:bg-white duration-300 hover:shadow-2xl"
-                >
-                  <MdOutlineAccessTime className="text-2xl" />
-                  <p className="text-lg"> Dukungan Seumur Hidup</p>
-                </motion.div>
-              </div>
-            </div>
+              Peta Interaktif
+            </button>
+
+            <button
+              onClick={() => setActiveTab("loyalty")}
+              className={`px-6 py-3 rounded-full font-medium transition-all duration-300
+                ${
+                  activeTab === "loyalty"
+                    ? "bg-orange-500 text-white shadow-md"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+            >
+              Poin Loyalitas
+            </button>
+
+            <button
+              onClick={() => setActiveTab("ulasan")}
+              className={`px-6 py-3 rounded-full font-medium transition-all duration-300
+                ${
+                  activeTab === "ulasan"
+                    ? "bg-orange-500 text-white shadow-md"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+            >
+              Ulasan Kontekstual
+            </button>
           </div>
         </div>
+
+        {/* Content */}
+        <motion.div
+          variants={FadeUp(0.3)}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          className="mt-12 text-center max-w-3xl mx-auto"
+        >
+          {activeTab === "peta" && (
+            <p className="text-gray-600 text-lg">
+              Temukan UMKM terdekat dengan peta interaktif, lokasi akurat,
+              dan navigasi langsung ke tempat tujuan.
+            </p>
+          )}
+
+          {activeTab === "loyalty" && (
+            <p className="text-gray-600 text-lg">
+              Dapatkan poin dari setiap transaksi dan tukarkan dengan
+              berbagai reward menarik.
+            </p>
+          )}
+
+          {activeTab === "ulasan" && (
+            <p className="text-gray-600 text-lg">
+              Baca ulasan jujur dan relevan langsung dari pelanggan
+              berdasarkan pengalaman nyata.
+            </p>
+          )}
+        </motion.div>
       </div>
     </section>
   );
 };
 
 export default Banner;
+
