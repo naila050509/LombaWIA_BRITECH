@@ -17,13 +17,13 @@ const Navbar = ({ textColor = "text-black" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  // ✅ Auto close menu setiap ganti halaman (biar ga nyangkut)
+  // ✅ Auto close saat pindah route (mencegah "nyangkut")
   useEffect(() => {
     setIsOpen(false);
     setShowSearch(false);
   }, [location.pathname]);
 
-  // ✅ Lock scroll saat drawer kebuka (mobile jadi lebih stabil)
+  // ✅ Lock scroll saat drawer kebuka (mobile lebih stabil)
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
@@ -34,7 +34,7 @@ const Navbar = ({ textColor = "text-black" }) => {
   return (
     <>
       {/* Navbar utama */}
-      <nav className="fixed top-0 left-0 w-full bg-white/70 backdrop-blur-md shadow-md z-[9999]">
+      <nav className="fixed top-0 left-0 w-full bg-white/70 backdrop-blur-md shadow-md z-[10000]">
         <div className="container py-4 flex justify-between items-center px-4">
           {/* Logo */}
           <h1 className={`font-bold text-2xl tracking-wide ${textColor}`}>
@@ -60,6 +60,7 @@ const Navbar = ({ textColor = "text-black" }) => {
             {/* Search Desktop */}
             <div className="relative">
               <button
+                type="button"
                 onClick={() => setShowSearch(true)}
                 className="text-2xl text-gray-700 hover:text-secondary transition-all"
               >
@@ -73,7 +74,7 @@ const Navbar = ({ textColor = "text-black" }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.25 }}
-                    className="absolute right-0 top-10 bg-white/90 backdrop-blur-md shadow-lg border border-gray-200 rounded-full flex items-center px-4 py-2 w-72 z-[9999]"
+                    className="absolute right-0 top-10 bg-white/90 backdrop-blur-md shadow-lg border border-gray-200 rounded-full flex items-center px-4 py-2 w-72 z-[10001]"
                   >
                     <TbSearch className="text-gray-500 text-2xl mr-2" />
                     <input
@@ -92,10 +93,11 @@ const Navbar = ({ textColor = "text-black" }) => {
             </div>
           </div>
 
-          {/* Tombol Menu Mobile (toggle) */}
+          {/* Tombol Menu Mobile (toggle: hamburger ↔ X) */}
           <div className="lg:hidden">
             <button
-              onClick={() => setIsOpen((v) => !v)}
+              type="button"
+              onPointerDown={() => setIsOpen((v) => !v)}
               className="p-2 rounded-xl active:scale-95 touch-manipulation"
               aria-label={isOpen ? "Close menu" : "Open menu"}
             >
@@ -119,8 +121,8 @@ const Navbar = ({ textColor = "text-black" }) => {
               animate={{ opacity: 0.45 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black z-[9998]"
+              onPointerDown={() => setIsOpen(false)}
+              className="fixed inset-0 bg-black z-[9999]"
             />
 
             {/* Sidebar */}
@@ -129,7 +131,7 @@ const Navbar = ({ textColor = "text-black" }) => {
               animate={{ x: 0 }}
               exit={{ x: -320 }}
               transition={{ duration: 0.22 }}
-              className="fixed top-0 left-0 h-dvh w-72 max-w-[85vw] bg-white text-black z-[9999] shadow-2xl pointer-events-auto"
+              className="fixed top-0 left-0 h-dvh w-72 max-w-[85vw] bg-white text-black z-[10001] shadow-2xl"
               role="dialog"
               aria-modal="true"
             >
@@ -137,8 +139,10 @@ const Navbar = ({ textColor = "text-black" }) => {
                 <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
                   <h2 className="text-xl font-bold text-black">Menu</h2>
 
+                  {/* X di dalam drawer (opsional) */}
                   <button
-                    onClick={(e) => {
+                    type="button"
+                    onPointerDown={(e) => {
                       e.stopPropagation();
                       setIsOpen(false);
                     }}
