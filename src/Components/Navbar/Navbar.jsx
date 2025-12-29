@@ -194,10 +194,6 @@ const Navbar = ({ textColor = "text-black" }) => {
                     </div>
                   ))}
                 </ul>
-
-                <p className="mt-6 text-xs text-gray-400">
-                  Tip: Geser dari handle untuk menutup.
-                </p>
               </div>
             </motion.aside>
           </>
