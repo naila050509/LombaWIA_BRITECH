@@ -1,138 +1,290 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import {
+  MapPin,
+  Mail,
+  Phone,
+  Instagram,
+  Music2,
+  Facebook,
+  Twitter,
+  Send,
+} from "lucide-react";
+
+const fadeUp = {
+  initial: { opacity: 0, y: 18 },
+  whileInView: { opacity: 1, y: 0 },
+  transition: { duration: 0.6 },
+  viewport: { once: true },
+};
+
+const Pill = ({ children, className = "" }) => (
+  <span
+    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${className}`}
+  >
+    {children}
+  </span>
+);
+
+const InfoRow = ({ icon: Icon, title, children }) => (
+  <div className="flex gap-3">
+    <div className="grid h-10 w-10 place-items-center rounded-2xl bg-amber-50 text-amber-700 flex-shrink-0">
+      <Icon className="h-5 w-5" />
+    </div>
+
+    <div className="min-w-0">
+      <p className="text-sm font-semibold text-slate-900">{title}</p>
+      <div className="text-sm text-slate-600 break-words">{children}</div>
+    </div>
+  </div>
+);
 
 function ContactUs() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const onChange = (key) => (e) => setForm({ ...form, [key]: e.target.value });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // sementara: kamu bisa sambung ke EmailJS / backend nanti
+    alert("Pesan kamu sudah siap dikirim ✅ (tinggal sambungkan ke backend)");
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f7ba34]/10 to-white py-16 px-6">
-      {/* HEADER */}
-      <motion.h1
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-4xl font-bold text-center mb-10 drop-shadow-sm"
-        style={{ color: "#69a79c" }}
-      >
-        Contact <span className="text-[#f7ba34]">LOCSIDE</span>
-      </motion.h1>
+    <div className="min-h-screen bg-slate-50">
+      {/* HERO */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-amber-50/40" />
+        <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-amber-200/40 blur-3xl" />
+        <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-emerald-200/40 blur-3xl" />
 
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
-        {/* LEFT SIDE: INFO PANEL */}
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-white shadow-xl rounded-2xl p-8"
-          style={{ border: "2px solid #f7ba34" }}
-        >
-          <h2 className="text-2xl font-semibold mb-4" style={{ color: "#69a79c" }}>
-            Get in Touch
-          </h2>
-
-          <p className="text-gray-600 mb-6">
-            Butuh bantuan, ingin memasukkan UMKM, atau mau kerja sama? Tim kami
-            selalu siap mendukung perkembangan UMKM Ciledug.
-          </p>
-
-          <div className="space-y-4 text-gray-700">
-            <div>
-              <p className="font-semibold" style={{ color: "#f7ba34" }}>
-                Alamat
-              </p>
-              <p>Gang Haji Nilan 2 nomor 69</p>
-            </div>
-
-            <div>
-              <p className="font-semibold" style={{ color: "#f7ba34" }}>
-                Email
-              </p>
-              <p>zahranaila338@gmail.com</p>
-            </div>
-
-            <div>
-              <p className="font-semibold" style={{ color: "#f7ba34" }}>
-                WhatsApp
-              </p>
-              <p>088289734711</p>
-            </div>
-          </div>
-
-          {/* SOCIAL */}
-          <div className="mt-6">
-            <h3 className="font-semibold mb-2" style={{ color: "#69a79c" }}>
-              Follow Us
-            </h3>
-            <div className="flex gap-4 text-xl">
-              <button className="hover:text-[#69a79c]">📸</button>
-              <button className="hover:text-[#69a79c]">🎵</button>
-              <button className="hover:text-[#69a79c]">📘</button>
-              <button className="hover:text-[#69a79c]">🐦</button>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* RIGHT SIDE: CONTACT FORM */}
-        <motion.form
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-white shadow-xl rounded-2xl p-8 space-y-5"
-          style={{ border: "2px solid #69a79c" }}
-        >
-          <h2 className="text-2xl font-semibold mb-4" style={{ color: "#69a79c" }}>
-            Send Us a Message
-          </h2>
-
-          <input
-            type="text"
-            placeholder="Nama Lengkap"
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 outline-none"
-            style={{ focusRingColor: "#69a79c" }}
-          />
-
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 outline-none"
-          />
-
-          <input
-            type="text"
-            placeholder="Subjek"
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 outline-none"
-          />
-
-          <textarea
-            placeholder="Pesan Kamu..."
-            rows="5"
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 outline-none"
-          ></textarea>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full text-white py-3 rounded-xl font-semibold shadow-md transition"
-            style={{
-              backgroundColor: "#f7ba34",
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#69a79c")}
-            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#f7ba34")}
+        <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-10 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
           >
-            Kirim Pesan ✨
-          </motion.button>
-        </motion.form>
-      </div>
+            <div className="flex justify-center gap-2">
+              <Pill className="bg-amber-100 text-amber-800">Contact</Pill>
+              <Pill className="bg-emerald-100 text-emerald-800">LocalSide</Pill>
+            </div>
 
-      {/* FOOTER CTA */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-        className="text-center mt-12 text-gray-600"
-      >
-        <p style={{ color: "#69a79c" }}>
-          LOCSIDE — Menghubungkan UMKM Ciledug dengan peluang bisnis yang lebih besar.
-        </p>
-      </motion.div>
+            <h1 className="mt-5 text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
+              Hubungi{" "}
+              <span className="bg-gradient-to-r from-amber-500 to-emerald-500 bg-clip-text text-transparent">
+                LocalSide
+              </span>
+            </h1>
+
+            <p className="mt-4 text-slate-600 max-w-2xl mx-auto leading-relaxed">
+              Butuh bantuan, ingin memasukkan UMKM, atau mau kerja sama? Kirim pesan
+              lewat form atau hubungi kontak di bawah ini.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CONTENT */}
+      <section className="mx-auto max-w-6xl px-6 pb-16">
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* LEFT: INFO */}
+          <motion.aside
+            {...fadeUp}
+            className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-extrabold text-slate-900">
+                  Get in Touch
+                </h2>
+                <p className="mt-2 text-sm text-slate-600">
+                  Tim LocalSide siap bantu UMKM dan warga Ciledug.
+                </p>
+              </div>
+              <span className="rounded-2xl bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+                Support UMKM
+              </span>
+            </div>
+
+            <div className="mt-7 space-y-5">
+              <InfoRow icon={MapPin} title="Alamat">
+                Gang Haji Nilan 2 nomor 69
+              </InfoRow>
+
+              <InfoRow icon={Mail} title="Email">
+                <a
+                  href="mailto:zahranaila338@gmail.com"
+                  className="text-amber-700 hover:text-amber-800 font-medium"
+                >
+                  zahranaila338@gmail.com
+                </a>
+              </InfoRow>
+
+              <InfoRow icon={Phone} title="WhatsApp">
+                <a
+                  href="https://wa.me/6288289734711"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-amber-700 hover:text-amber-800 font-medium"
+                >
+                  088289734711
+                </a>
+              </InfoRow>
+            </div>
+
+            {/* SOCIAL */}
+            <div className="mt-8">
+              <h3 className="text-sm font-semibold text-slate-900">Follow Us</h3>
+              <div className="mt-3 flex gap-3">
+                <a
+                  href="#"
+                  className="grid h-11 w-11 place-items-center rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-5 w-5" />
+                </a>
+                <a
+                  href="#"
+                  className="grid h-11 w-11 place-items-center rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
+                  aria-label="TikTok"
+                >
+                  <Music2 className="h-5 w-5" />
+                </a>
+                <a
+                  href="#"
+                  className="grid h-11 w-11 place-items-center rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-5 w-5" />
+                </a>
+                <a
+                  href="#"
+                  className="grid h-11 w-11 place-items-center rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
+                  aria-label="Twitter"
+                >
+                  <Twitter className="h-5 w-5" />
+                </a>
+              </div>
+
+              {/* mini highlights */}
+              <div className="mt-6 grid grid-cols-2 gap-3">
+                <div className="rounded-2xl bg-amber-50 p-4">
+                  <p className="text-sm font-bold text-slate-900">Fast Response</p>
+                  <p className="text-xs text-slate-600 mt-1">Balas cepat via WA</p>
+                </div>
+                <div className="rounded-2xl bg-emerald-50 p-4">
+                  <p className="text-sm font-bold text-slate-900">Partnership</p>
+                  <p className="text-xs text-slate-600 mt-1">Kolaborasi lokal</p>
+                </div>
+              </div>
+            </div>
+          </motion.aside>
+
+          {/* RIGHT: FORM */}
+          <motion.form
+            {...fadeUp}
+            onSubmit={handleSubmit}
+            className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-black/5"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-extrabold text-slate-900">
+                  Send a Message
+                </h2>
+                <p className="mt-2 text-sm text-slate-600">
+                  Isi form ini, nanti kami follow up.
+                </p>
+              </div>
+              <Pill className="bg-amber-100 text-amber-800">Form</Pill>
+            </div>
+
+            <div className="mt-6 grid sm:grid-cols-2 gap-4">
+              <div className="sm:col-span-1">
+                <label className="text-sm font-semibold text-slate-700">
+                  Nama Lengkap
+                </label>
+                <input
+                  value={form.name}
+                  onChange={onChange("name")}
+                  type="text"
+                  placeholder="Nama kamu"
+                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-amber-200"
+                  required
+                />
+              </div>
+
+              <div className="sm:col-span-1">
+                <label className="text-sm font-semibold text-slate-700">
+                  Email
+                </label>
+                <input
+                  value={form.email}
+                  onChange={onChange("email")}
+                  type="email"
+                  placeholder="email@contoh.com"
+                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-amber-200"
+                  required
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="text-sm font-semibold text-slate-700">
+                  Subjek
+                </label>
+                <input
+                  value={form.subject}
+                  onChange={onChange("subject")}
+                  type="text"
+                  placeholder="Contoh: Daftar UMKM / Kerja sama / Bantuan"
+                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-amber-200"
+                  required
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="text-sm font-semibold text-slate-700">
+                  Pesan
+                </label>
+                <textarea
+                  value={form.message}
+                  onChange={onChange("message")}
+                  placeholder="Tulis pesan kamu di sini..."
+                  rows={6}
+                  className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-amber-200 resize-none"
+                  required
+                />
+              </div>
+            </div>
+
+            <motion.button
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.98 }}
+              type="submit"
+              className="mt-6 w-full rounded-2xl bg-amber-500 px-5 py-3 font-semibold text-white shadow-sm hover:bg-amber-600 transition flex items-center justify-center gap-2"
+            >
+              <Send className="h-5 w-5" />
+              Kirim Pesan
+            </motion.button>
+
+            <p className="mt-4 text-xs text-slate-500 leading-relaxed">
+              Dengan mengirim pesan, kamu setuju data digunakan untuk keperluan
+              komunikasi (balasan) saja.
+            </p>
+          </motion.form>
+        </div>
+
+        {/* FOOTER NOTE */}
+        <motion.div {...fadeUp} className="text-center mt-10 text-slate-500">
+          <p>
+            <span className="font-semibold text-slate-700">LocalSide</span> — Menghubungkan UMKM Ciledug dengan peluang bisnis yang lebih besar.
+          </p>
+        </motion.div>
+      </section>
     </div>
   );
 }

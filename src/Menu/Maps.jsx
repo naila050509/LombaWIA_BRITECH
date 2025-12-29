@@ -18,175 +18,260 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-const FitToMarker = ({ position }) => {
+const FlyTo = ({ position, zoom = 15 }) => {
   const map = useMap();
   useEffect(() => {
-    if (position) {
-      map.setView(position, 15, { animate: true });
-    }
-  }, [position, map]);
+    if (position) map.flyTo(position, zoom, { animate: true, duration: 0.8 });
+  }, [position, zoom, map]);
   return null;
 };
 
 const MapsPage = () => {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
-  const [selected, setSelected] = useState(null); // marker selected (id)
+  const [selectedId, setSelectedId] = useState(null);
+  const [focusPos, setFocusPos] = useState(null);
   const [userLoc, setUserLoc] = useState(null);
-  const mapRef = useRef();
+  const mapRef = useRef(null);
 
   useEffect(() => {
-    // try to get user location (optional)
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => setUserLoc([pos.coords.latitude, pos.coords.longitude]),
-        () => {} // ignore error
-      );
-    }
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setUserLoc([pos.coords.latitude, pos.coords.longitude]),
+      () => {}
+    );
   }, []);
 
-  // derive categories for filter
   const categories = useMemo(() => {
     const set = new Set(umkms.map((u) => u.category));
     return ["All", ...Array.from(set)];
   }, []);
 
-  // filtered list
   const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
     return umkms.filter((u) => {
       const matchesQuery =
-        u.name.toLowerCase().includes(query.toLowerCase()) ||
-        (u.description || "").toLowerCase().includes(query.toLowerCase());
+        !q ||
+        u.name.toLowerCase().includes(q) ||
+        (u.description || "").toLowerCase().includes(q);
       const matchesCategory = category === "All" ? true : u.category === category;
       return matchesQuery && matchesCategory;
     });
   }, [query, category]);
 
-  const handleListClick = (umkm) => {
-    setSelected([umkm.lat, umkm.lng]);
-    if (mapRef.current) {
-      mapRef.current.setView([umkm.lat, umkm.lng], 15, { animate: true });
-    }
-    setSelected(umkm.id);
+  const handleListClick = (u) => {
+    setSelectedId(u.id);
+    setFocusPos([u.lat, u.lng]);
+    mapRef.current?.flyTo([u.lat, u.lng], 15, { animate: true, duration: 0.8 });
+  };
+
+  const resetFilters = () => {
+    setQuery("");
+    setCategory("All");
+    setSelectedId(null);
+    setFocusPos(null);
+  };
+
+  const goToMyLocation = () => {
+    if (!userLoc) return;
+    mapRef.current?.flyTo(userLoc, 15, { animate: true, duration: 0.8 });
+    setFocusPos(userLoc);
+    setSelectedId(null);
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
-      {/* Sidebar / list */}
-      <aside className="w-full lg:w-1/3 max-h-screen overflow-auto p-4 bg-white z-10">
-        <h2 className="text-xl font-semibold mb-3">Temukan UMKM</h2>
+    <div className="min-h-screen bg-slate-50">
+      <div className="mx-auto max-w-7xl px-3 lg:px-6 py-4">
+        <div className="flex flex-col lg:flex-row gap-4">
+          {/* Sidebar */}
+          <aside className="w-full lg:w-[420px]">
+            <div className="bg-white rounded-2xl border shadow-sm overflow-hidden">
+              {/* Header */}
+              <div className="p-4 border-b bg-gradient-to-b from-white to-slate-50">
+                <h2 className="text-lg font-semibold">Temukan UMKM</h2>
+                <p className="text-sm text-slate-500 mt-1">
+                  {filtered.length} hasil • klik card untuk fokus ke map
+                </p>
 
-        <div className="mb-3">
-          <input
-            type="search"
-            placeholder="Cari nama, makanan, atau layanan..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
+                <div className="mt-3 space-y-2">
+                  <input
+                    type="search"
+                    placeholder="Cari nama, makanan, atau layanan..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    className="w-full border rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-200"
+                  />
 
-        <div className="mb-4 flex gap-2">
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="border rounded px-3 py-2"
-          >
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+                  <div className="flex gap-2">
+                    <select
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      className="flex-1 border rounded-xl px-3 py-2 bg-white"
+                    >
+                      {categories.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </select>
 
-          <button
-            onClick={() => {
-              setQuery("");
-              setCategory("All");
-            }}
-            className="px-3 py-2 border rounded"
-          >
-            Reset
-          </button>
-        </div>
+                    <button
+                      onClick={resetFilters}
+                      className="px-3 py-2 border rounded-xl hover:bg-slate-50"
+                      type="button"
+                    >
+                      Reset
+                    </button>
 
-        <div className="space-y-3">
-          {filtered.map((u) => (
-            <motion.div
-              key={u.id}
-              onClick={() => handleListClick(u)}
-              className={`p-3 border rounded cursor-pointer hover:shadow ${selected === u.id ? "ring-2 ring-indigo-300" : ""}`}
-              whileHover={{ scale: 1.02 }}
-            >
-              <div className="flex gap-3">
-                <img src={u.image} alt={u.name} className="w-20 h-20 object-cover rounded" />
-                <div>
-                  <h3 className="font-semibold">{u.name}</h3>
-                  <p className="text-sm text-gray-600">{u.category} • {u.rating}⭐</p>
-                  <p className="text-sm text-gray-500 truncate">{u.description}</p>
-                  <div className="mt-2">
-                    <Link to={`/umkm/${u.id}`} className="text-sm text-indigo-600">Lihat Profil</Link>
+                    <button
+                      onClick={goToMyLocation}
+                      className="px-3 py-2 border rounded-xl hover:bg-slate-50"
+                      type="button"
+                      title="Ke lokasi saya"
+                    >
+                      Lokasi
+                    </button>
                   </div>
                 </div>
               </div>
-            </motion.div>
-          ))}
 
-          {filtered.length === 0 && <p className="text-gray-500">Tidak ditemukan.</p>}
+              {/* List */}
+              <div className="max-h-[70vh] lg:max-h-[calc(100vh-210px)] overflow-auto p-3 space-y-3">
+                {filtered.map((u) => (
+                  <motion.button
+                    key={u.id}
+                    onClick={() => handleListClick(u)}
+                    className={`w-full text-left p-3 border rounded-2xl bg-white overflow-hidden transition
+                      hover:shadow-sm hover:border-slate-300
+                      ${selectedId === u.id ? "ring-2 ring-indigo-200 border-indigo-200" : "border-slate-200"}
+                    `}
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    type="button"
+                  >
+                    <div className="flex gap-3">
+                      <img
+                        src={u.image}
+                        alt={u.name}
+                        className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
+                      />
+
+                      {/* FIX overflow teks: min-w-0 */}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-start justify-between gap-2">
+                          <h3 className="font-semibold truncate">{u.name}</h3>
+                          <span className="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600 flex-shrink-0">
+                            {u.rating}⭐
+                          </span>
+                        </div>
+
+                        <p className="text-sm text-slate-600 truncate">{u.category}</p>
+
+                        {/* kalau kamu pakai tailwind line-clamp plugin, ganti jadi: className="text-sm text-slate-500 line-clamp-2" */}
+                        <p className="text-sm text-slate-500 break-words whitespace-normal mt-1">
+                          {u.description}
+                        </p>
+
+                        <div className="mt-3 flex gap-2">
+                          <Link
+                            to={`/umkm/${u.id}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-xs px-3 py-1.5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700"
+                          >
+                            Lihat Profil
+                          </Link>
+
+                          <a
+                            href={`https://www.google.com/maps/dir/?api=1&destination=${u.lat},${u.lng}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-xs px-3 py-1.5 rounded-xl border hover:bg-slate-50"
+                          >
+                            Directions
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.button>
+                ))}
+
+                {filtered.length === 0 && (
+                  <p className="text-slate-500 p-3">Tidak ditemukan.</p>
+                )}
+              </div>
+            </div>
+          </aside>
+
+          {/* Map */}
+          <section className="flex-1">
+            <div className="bg-white rounded-2xl border shadow-sm overflow-hidden h-[70vh] lg:h-[calc(100vh-32px)]">
+              <MapContainer
+                center={userLoc || [-6.2, 106.816666]}
+                zoom={13}
+                style={{ height: "100%", width: "100%" }}
+                whenCreated={(mapInstance) => (mapRef.current = mapInstance)}
+                scrollWheelZoom={true}
+              >
+                <TileLayer
+                  attribution='&copy; OpenStreetMap contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+
+                {focusPos && <FlyTo position={focusPos} zoom={15} />}
+
+                {filtered.map((u) => (
+                  <Marker
+                    key={u.id}
+                    position={[u.lat, u.lng]}
+                    eventHandlers={{
+                      click: () => {
+                        setSelectedId(u.id);
+                        setFocusPos([u.lat, u.lng]);
+                      },
+                    }}
+                  >
+                    <Popup closeButton={false} minWidth={240}>
+                      <div className="w-60">
+                        <img
+                          src={u.image}
+                          alt={u.name}
+                          className="w-full h-28 object-cover rounded mb-2"
+                        />
+                        <h3 className="font-semibold">{u.name}</h3>
+                        <p className="text-sm text-gray-600">
+                          {u.category} • {u.rating}⭐
+                        </p>
+                        <p className="text-sm mt-1">{u.address}</p>
+
+                        <div className="mt-2 flex gap-2">
+                          <a
+                            href={`https://www.google.com/maps/dir/?api=1&destination=${u.lat},${u.lng}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-xs px-3 py-1 border rounded"
+                          >
+                            Directions
+                          </a>
+
+                          <Link
+                            to={`/umkm/${u.id}`}
+                            className="text-xs px-3 py-1 bg-indigo-600 text-white rounded"
+                          >
+                            Profil
+                          </Link>
+                        </div>
+                      </div>
+                    </Popup>
+                  </Marker>
+                ))}
+              </MapContainer>
+            </div>
+          </section>
         </div>
-      </aside>
-
-      {/* Map */}
-      <div className="w-full lg:flex-1 h-[70vh] lg:h-screen relative">
-        <MapContainer
-          center={userLoc || [-6.200000, 106.816666]}
-          zoom={13}
-          style={{ height: "100%", width: "100%" }}
-          whenCreated={(mapInstance) => (mapRef.current = mapInstance)}
-          scrollWheelZoom={true}
-        >
-          <TileLayer
-            attribution='&copy; OpenStreetMap contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-
-          {/* center when user clicks list */}
-          {selected && Array.isArray(selected) && <FitToMarker position={selected} />}
-
-          {/* markers */}
-          {filtered.map((u) => (
-            <Marker key={u.id} position={[u.lat, u.lng]}>
-              <Popup closeButton={false} minWidth={220}>
-                <div className="w-56">
-                  <img src={u.image} alt={u.name} className="w-full h-28 object-cover rounded mb-2" />
-                  <h3 className="font-semibold">{u.name}</h3>
-                  <p className="text-sm text-gray-600">{u.category} • {u.rating}⭐</p>
-                  <p className="text-sm mt-1">{u.address}</p>
-                  <div className="mt-2 flex gap-2">
-                    {/* Open Google Maps directions */}
-                    <a
-                      href={`https://www.google.com/maps/dir/?api=1&destination=${u.lat},${u.lng}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-xs px-3 py-1 border rounded"
-                    >
-                      Directions
-                    </a>
-
-                    <Link to={`/umkm/${u.id}`} className="text-xs px-3 py-1 bg-indigo-600 text-white rounded">
-                      Profil
-                    </Link>
-                  </div>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-
-        </MapContainer>
       </div>
     </div>
   );
 };
 
 export default MapsPage;
-

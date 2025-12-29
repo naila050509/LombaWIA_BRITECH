@@ -1,165 +1,275 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { MapPin, Coffee, Store, Users, Sparkles } from "lucide-react";
+import {
+  MapPin,
+  Coffee,
+  Users,
+  Sparkles,
+  Store,
+  HeartHandshake,
+  Rocket,
+  ShieldCheck,
+} from "lucide-react";
+
+const fadeUp = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  transition: { duration: 0.6 },
+  viewport: { once: true },
+};
+
+const Pill = ({ children, className = "" }) => (
+  <span
+    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${className}`}
+  >
+    {children}
+  </span>
+);
+
+const FeatureCard = ({ icon: Icon, title, desc }) => (
+  <motion.div
+    whileHover={{ y: -2 }}
+    className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 hover:shadow-md transition"
+  >
+    <div className="flex items-start gap-4">
+      <div className="grid h-12 w-12 place-items-center rounded-2xl bg-amber-50 text-amber-700">
+        <Icon className="h-6 w-6" />
+      </div>
+
+      <div className="min-w-0">
+        <h3 className="text-lg font-bold text-slate-900">{title}</h3>
+        <p className="mt-1 text-sm leading-relaxed text-slate-600">{desc}</p>
+      </div>
+    </div>
+  </motion.div>
+);
+
+/** FIXED STAT CARD: rapi, center, ga pecah-pecah */
+const StatCard = ({ value, label, icon: Icon }) => (
+  <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5 hover:shadow-md transition h-44 flex flex-col items-center justify-center text-center">
+    <div className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-50 text-emerald-700 mb-4">
+      <Icon className="h-6 w-6" />
+    </div>
+
+    <p className="text-2xl font-extrabold text-slate-900 leading-tight">
+      {value}
+    </p>
+
+    <p className="mt-2 text-sm text-slate-500 leading-relaxed max-w-[14rem]">
+      {label}
+    </p>
+  </div>
+);
 
 function AboutUs() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-indigo-50 text-gray-800 pb-20">
-      {/* Hero Section */}
+    <div className="min-h-screen bg-slate-50 text-slate-800 pb-20">
+      {/* HERO */}
       <section className="relative overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center py-24 px-6"
-        >
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-[#f7ba34] to-[#69a79c] bg-clip-text text-transparent drop-shadow-md">
-            LocalSide On Ciledug Area
-          </h1>
-          <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto text-gray-600">
-            Platform lokal yang menghubungkan UMKM Ciledug dengan pembeli secara
-            cepat, akurat, dan penuh kehangatan lokal.
-          </p>
-        </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-amber-50/40" />
+        <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-amber-200/40 blur-3xl" />
+        <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-emerald-200/40 blur-3xl" />
 
-        {/* Floating sparkles */}
-        <Sparkles className="absolute top-10 left-12 text-[#69a79c] animate-pulse" />
-        <Sparkles className="absolute bottom-10 right-12 text-[#f7ba34] animate-pulse" />
+        <div className="relative mx-auto max-w-6xl px-6 py-20 lg:py-24">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="text-center"
+          >
+            <div className="flex justify-center gap-2">
+              <Pill className="bg-amber-100 text-amber-800">Local Marketplace</Pill>
+              <Pill className="bg-emerald-100 text-emerald-800">
+                Ciledug Area
+              </Pill>
+            </div>
+
+            <h1 className="mt-5 text-4xl md:text-6xl font-extrabold tracking-tight">
+              <span className="bg-gradient-to-r from-amber-500 to-emerald-500 bg-clip-text text-transparent">
+                LocalSide
+              </span>{" "}
+              untuk UMKM Ciledug
+            </h1>
+
+            <p className="mt-5 text-base md:text-xl max-w-3xl mx-auto text-slate-600 leading-relaxed">
+              Platform lokal yang menghubungkan UMKM Ciledug dengan pembeli secara cepat,
+              akurat, dan hangat—biar usaha sekitar makin terlihat, mudah ditemukan,
+              dan makin rame order.
+            </p>
+
+            <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+              <a
+                href="/jelajahi"
+                className="rounded-2xl bg-amber-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-amber-600 transition"
+              >
+                Jelajahi UMKM →
+              </a>
+              <a
+                href="/maps"
+                className="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
+              >
+                Lihat di Peta
+              </a>
+            </div>
+          </motion.div>
+
+          <Sparkles className="absolute top-8 left-8 text-emerald-400/80 animate-pulse" />
+          <Sparkles className="absolute bottom-8 right-8 text-amber-400/80 animate-pulse" />
+        </div>
       </section>
 
-      {/* WHY LOCALSIDE EXISTS */}
-      <section className="mt-10 px-6 max-w-5xl mx-auto">
+      {/* WHY */}
+      <section className="mx-auto max-w-6xl px-6">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="bg-white p-8 rounded-2xl shadow-xl border-l-4 border-[#f7ba34]"
+          {...fadeUp}
+          className="rounded-3xl bg-white shadow-sm ring-1 ring-black/5 p-8 lg:p-10"
         >
-          <h2 className="text-3xl font-bold mb-4 text-[#f7ba34]">
-            Kenapa LocalSide Dibuat?
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+            <div className="max-w-2xl">
+              <Pill className="bg-amber-100 text-amber-800">Kenapa dibuat?</Pill>
+              <h2 className="mt-3 text-3xl font-extrabold text-slate-900">
+                LocalSide hadir sebagai “jembatan” UMKM & warga
+              </h2>
+              <p className="mt-4 text-slate-600 leading-relaxed">
+                Ciledug punya banyak UMKM hebat, tapi sering belum ketemu pembeli
+                yang tepat. LocalSide dirancang biar warga bisa menemukan usaha lokal
+                lebih mudah, sementara UMKM bisa lebih terlihat tanpa ribet.
+              </p>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                <Pill className="bg-slate-100 text-slate-700">Cepat & sederhana</Pill>
+                <Pill className="bg-slate-100 text-slate-700">Dekat secara lokasi</Pill>
+                <Pill className="bg-slate-100 text-slate-700">Rekomendasi relevan</Pill>
+              </div>
+            </div>
+
+            {/* Stats (2x2 rapi) */}
+            <div className="grid grid-cols-2 gap-4 w-full lg:w-[420px]">
+              <StatCard value="3 km" label="Radius UMKM terdekat" icon={MapPin} />
+              <StatCard value="Realtime" label="Arah & navigasi cepat" icon={ShieldCheck} />
+              <StatCard value="Kurasi" label="Kategori & rating" icon={Store} />
+              <StatCard value="Komunitas" label="Review warga sekitar" icon={Users} />
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* FEATURES */}
+      <section className="mx-auto max-w-6xl px-6 mt-16">
+        <motion.div {...fadeUp} className="text-center">
+          <Pill className="bg-emerald-100 text-emerald-800">Fitur unggulan</Pill>
+          <h2 className="mt-3 text-3xl font-extrabold text-slate-900">
+            Fitur yang bikin LocalSide beda 🚀
           </h2>
-          <p className="text-gray-600 leading-relaxed text-lg">
-            Ciledug punya ribuan UMKM hebat, tapi banyak yang belum ditemukan.
-            LocalSide lahir untuk menjadi jembatan: menghubungkan warga Ciledug
-            dengan produk lokal terbaik melalui teknologi yang sederhana,
-            cepat, dan terasa dekat.
+          <p className="mt-3 text-slate-600 max-w-2xl mx-auto">
+            Dibuat berdasarkan kebutuhan warga dan UMKM. Fokusnya: gampang dipakai,
+            hasilnya terasa.
           </p>
         </motion.div>
+
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <FeatureCard
+            icon={MapPin}
+            title="UMKM Radar"
+            desc="Deteksi UMKM terdekat otomatis. Buka halaman—langsung muncul rekomendasi sekitar kamu."
+          />
+          <FeatureCard
+            icon={Coffee}
+            title="Mood-Based Suggestion"
+            desc="Pilih mood (lapar, butuh kopi, pengen jajanan). LocalSide kasih saran yang pas."
+          />
+          <FeatureCard
+            icon={Users}
+            title="Ciledug Connect"
+            desc="Lihat review warga, rekomendasi tetangga, dan usaha yang lagi rame di area kamu."
+          />
+        </div>
       </section>
 
-      {/* FEATURES SECTION */}
-      <section className="mt-20 px-6 max-w-6xl mx-auto">
-        <h2 className="text-center text-3xl font-bold text-[#69a79c] mb-12">
-          Fitur Baru yang Beda Banget 🚀
-        </h2>
+      {/* STORY */}
+      <section className="mx-auto max-w-6xl px-6 mt-20">
+        <motion.div {...fadeUp} className="text-center">
+          <Pill className="bg-amber-100 text-amber-800">Cerita</Pill>
+          <h2 className="mt-3 text-3xl font-extrabold text-slate-900">
+            Perjalanan LocalSide
+          </h2>
+          <p className="mt-3 text-slate-600 max-w-2xl mx-auto">
+            Dari keresahan kecil—jadi platform yang ngebantu usaha lokal makin terlihat.
+          </p>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {/* FEATURE 1 */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-white p-6 rounded-2xl shadow-lg border border-[#69a79c]/30"
-          >
-            <MapPin className="text-[#69a79c] w-12 h-12 mb-4" />
-            <h3 className="text-xl font-semibold mb-2 text-[#f7ba34]">
-              UMKM Radar
-            </h3>
-            <p className="text-gray-600 text-sm">
-              Fitur pemindai lokasi yang otomatis mendeteksi UMKM terdekat
-              dalam radius 3 km. Buka page — langsung nemu yang terdekat.
+        <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <motion.div {...fadeUp} className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+            <div className="flex items-center gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-amber-50 text-amber-700">
+                <MapPin className="h-5 w-5" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">Dimulai dari Ciledug</h3>
+            </div>
+            <p className="mt-3 text-sm text-slate-600 leading-relaxed">
+              Berangkat dari satu tujuan: bikin UMKM rumahan Ciledug lebih mudah ditemukan
+              dan makin berkembang.
             </p>
           </motion.div>
 
-          {/* FEATURE 2 */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-white p-6 rounded-2xl shadow-lg border border-[#69a79c]/30"
-          >
-            <Coffee className="text-[#69a79c] w-12 h-12 mb-4" />
-            <h3 className="text-xl font-semibold mb-2 text-[#f7ba34]">
-              Mood-Based Suggestion
-            </h3>
-            <p className="text-gray-600 text-sm">
-              Kamu pilih mood kamu (lapar, butuh kopi, pengen jajanan), dan
-              LocalSide rekomendasikan UMKM yang pas untuk suasana hati kamu.
+          <motion.div {...fadeUp} className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+            <div className="flex items-center gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-emerald-50 text-emerald-700">
+                <HeartHandshake className="h-5 w-5" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">Dibangun bareng UMKM</h3>
+            </div>
+            <p className="mt-3 text-sm text-slate-600 leading-relaxed">
+              Setiap fitur dirancang dari masalah nyata di lapangan—bukan sekadar ide di atas kertas.
             </p>
           </motion.div>
 
-          {/* FEATURE 3 */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-white p-6 rounded-2xl shadow-lg border border-[#69a79c]/30"
-          >
-            <Users className="text-[#69a79c] w-12 h-12 mb-4" />
-            <h3 className="text-xl font-semibold mb-2 text-[#f7ba34]">
-              Ciledug Connect
-            </h3>
-            <p className="text-gray-600 text-sm">
-              Fitur sosial mini: lihat review warga sekitar, rekomendasi tetangga,
-              dan UMKM favorit di area kamu.
+          <motion.div {...fadeUp} className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+            <div className="flex items-center gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-2xl bg-amber-50 text-amber-700">
+                <Rocket className="h-5 w-5" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">Menuju kota digital</h3>
+            </div>
+            <p className="mt-3 text-sm text-slate-600 leading-relaxed">
+              Visi LocalSide: bikin Ciledug jadi pusat UMKM digital yang aktif dan hidup di Tangerang.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* MINI TIMELINE STORY */}
-      <section className="mt-24 px-6 max-w-5xl mx-auto">
-        <h2 className="text-3xl font-bold text-[#69a79c] mb-10 text-center">
-          Cerita LocalSide
-        </h2>
+      {/* CTA */}
+      <section className="mx-auto max-w-6xl px-6 mt-20">
+        <motion.div
+          {...fadeUp}
+          className="rounded-3xl bg-gradient-to-r from-amber-500 to-emerald-500 p-10 text-white shadow-sm"
+        >
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+            <div className="max-w-2xl">
+              <h3 className="text-2xl font-extrabold">
+                Mau UMKM kamu muncul di LocalSide?
+              </h3>
+              <p className="mt-2 text-white/90">
+                Daftarkan usaha kamu biar lebih mudah ditemukan warga sekitar.
+              </p>
+            </div>
 
-        <div className="space-y-10">
-          {/* Step 1 */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="bg-white p-6 rounded-2xl shadow-md border-l-4 border-[#f7ba34]"
-          >
-            <h3 className="text-xl font-semibold mb-2 text-[#69a79c]">
-              Dimulai dari Ciledug
-            </h3>
-            <p className="text-gray-600">
-              LocalSide mulai dari satu tujuan: bantu UMKM rumahan Ciledug
-              untuk lebih terlihat dan berkembang.
-            </p>
-          </motion.div>
-
-          {/* Step 2 */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="bg-white p-6 rounded-2xl shadow-md border-l-4 border-[#69a79c]"
-          >
-            <h3 className="text-xl font-semibold mb-2 text-[#f7ba34]">
-              Dibangun Dengan Cinta UMKM
-            </h3>
-            <p className="text-gray-600">
-              Setiap fitur dirancang berdasarkan masalah nyata yang dialami UMKM
-              di lapangan — bukan sekedar teori.
-            </p>
-          </motion.div>
-
-          {/* Step 3 */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="bg-white p-6 rounded-2xl shadow-md border-l-4 border-[#f7ba34]"
-          >
-            <h3 className="text-xl font-semibold mb-2 text-[#69a79c]">
-              Menuju Kota Digital
-            </h3>
-            <p className="text-gray-600">
-              Visi LocalSide adalah membuat Ciledug menjadi salah satu pusat
-              UMKM digital paling hidup dan aktif di Tangerang.
-            </p>
-          </motion.div>
-        </div>
+            <div className="flex gap-3">
+              <a
+                href="/daftar"
+                className="rounded-2xl bg-white px-6 py-3 text-sm font-semibold text-slate-900 hover:bg-white/90 transition"
+              >
+                Daftar UMKM
+              </a>
+              <a
+                href="/contact"
+                className="rounded-2xl border border-white/40 px-6 py-3 text-sm font-semibold hover:bg-white/10 transition"
+              >
+                Kontak
+              </a>
+            </div>
+          </div>
+        </motion.div>
       </section>
     </div>
   );
