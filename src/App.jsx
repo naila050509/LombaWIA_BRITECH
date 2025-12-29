@@ -7,25 +7,6 @@ import Banner from "./Components/Banner/Banner";
 import Footer from "./Components/Footer/Footer";
 import MainLayout from "./MainLayout";
 
-// ✅ Lazy-load pages (biar bundle awal kecil)
-const Makanan = lazy(() => import("./Pages/Makanan"));
-const Minuman = lazy(() => import("./Pages/Minuman"));
-const Elektronik = lazy(() => import("./Pages/Elektronik"));
-const Jasa = lazy(() => import("./Pages/Jasa"));
-
-const Maps = lazy(() => import("./Menu/Maps"));
-const Categories = lazy(() => import("./Menu/Categories"));
-const AboutUs = lazy(() => import("./Menu/AboutUs"));
-const Contact = lazy(() => import("./Menu/Contact"));
-
-const DetailUMKM = lazy(() => import("./Detail_UMKM/Detail_Makanan"));
-
-const Loading = () => (
-  <div className="min-h-screen grid place-items-center bg-white">
-    <div className="text-slate-600">Loading...</div>
-  </div>
-);
-
 const App = () => {
   return (
     <BrowserRouter>
