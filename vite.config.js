@@ -3,11 +3,8 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: process.env.VITE_BASE_PATH || "/LombaWIA_BRITECH/",
+  base: "/", // ✅ FIX 404 assets di Vercel
   build: {
-    // opsional: kalau mau “warning”-nya lebih longgar
-    // chunkSizeWarningLimit: 1000,
-
     rollupOptions: {
       output: {
         manualChunks: {
