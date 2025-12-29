@@ -20,6 +20,12 @@ const Contact = lazy(() => import("./Menu/Contact"));
 
 const DetailUMKM = lazy(() => import("./Detail_UMKM/Detail_Makanan"));
 
+const Loading = () => (
+  <div className="min-h-screen grid place-items-center bg-white">
+    <div className="text-slate-600">Loading...</div>
+  </div>
+);
+
 const App = () => {
   return (
     <BrowserRouter>
