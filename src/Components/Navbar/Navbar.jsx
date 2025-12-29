@@ -12,6 +12,8 @@ const NavbarMenu = [
   { id: 5, title: "Contact", link: "/Contact" },
 ];
 
+const DRAWER_W = 288; // w-72 = 18rem = 288px
+
 const Navbar = ({ textColor = "text-black" }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -33,6 +35,15 @@ const Navbar = ({ textColor = "text-black" }) => {
 
   return (
     <>
+      {/* ✅ Edge swipe zone: geser dari kiri untuk buka */}
+      {!isOpen && (
+        <div
+          className="fixed left-0 top-0 h-dvh w-3 z-[9999] lg:hidden"
+          onPointerDown={() => setIsOpen(true)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Navbar utama */}
       <nav className="fixed top-0 left-0 w-full bg-white/70 backdrop-blur-md shadow-md z-[10000]">
         <div className="container py-4 flex justify-between items-center px-4">
@@ -124,15 +135,24 @@ const Navbar = ({ textColor = "text-black" }) => {
               className="fixed inset-0 bg-black z-[9999]"
             />
 
-            {/* Sidebar */}
+            {/* Sidebar (✅ swipe/drag) */}
             <motion.aside
-              initial={{ x: -320 }}
+              initial={{ x: -DRAWER_W }}
               animate={{ x: 0 }}
-              exit={{ x: -320 }}
-              transition={{ duration: 0.22 }}
-              className="fixed top-0 left-0 h-dvh w-72 max-w-[85vw] bg-white text-black z-[10001] shadow-2xl pointer-events-auto"
+              exit={{ x: -DRAWER_W }}
+              transition={{ type: "tween", duration: 0.22 }}
+              className="fixed top-0 left-0 h-dvh w-72 max-w-[85vw] bg-white text-black z-[10001] shadow-2xl pointer-events-auto touch-pan-y"
               role="dialog"
               aria-modal="true"
+              drag="x"
+              dragConstraints={{ left: -DRAWER_W, right: 0 }}
+              dragElastic={0.06}
+              onDragEnd={(e, info) => {
+                // swipe ke kiri cukup jauh / cepat -> tutup
+                if (info.offset.x < -90 || info.velocity.x < -700) {
+                  setIsOpen(false);
+                }
+              }}
             >
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
@@ -167,6 +187,11 @@ const Navbar = ({ textColor = "text-black" }) => {
                     </div>
                   ))}
                 </ul>
+
+                {/* Hint kecil biar user tau bisa swipe */}
+                <p className="mt-6 text-xs text-gray-400">
+                  Tip: Geser ke kiri untuk menutup menu.
+                </p>
               </div>
             </motion.aside>
           </>
