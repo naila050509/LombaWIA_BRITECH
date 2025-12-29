@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { IoMdMenu, IoMdClose } from "react-icons/io";
 import { TbSearch, TbX } from "react-icons/tb";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useDragControls,
+} from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 
 const NavbarMenu = [
@@ -12,20 +16,21 @@ const NavbarMenu = [
   { id: 5, title: "Contact", link: "/Contact" },
 ];
 
-const DRAWER_W = 288; // w-72 = 18rem = 288px
+const DRAWER_W = 288; // w-72
 
 const Navbar = ({ textColor = "text-black" }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const dragControls = useDragControls();
 
-  // auto close saat pindah halaman
+  // ✅ auto close saat pindah route
   useEffect(() => {
     setIsOpen(false);
     setShowSearch(false);
   }, [location.pathname]);
 
-  // lock scroll saat sidebar kebuka
+  // ✅ lock scroll saat drawer kebuka
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
@@ -35,18 +40,10 @@ const Navbar = ({ textColor = "text-black" }) => {
 
   return (
     <>
-      {/* Edge swipe zone: tap/drag dari kiri untuk buka */}
-      {!isOpen && (
-        <div
-          className="fixed left-0 top-0 h-dvh w-3 z-[9999] lg:hidden"
-          onPointerDown={() => setIsOpen(true)}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Navbar */}
+      {/* NAVBAR */}
       <nav className="fixed top-0 left-0 w-full bg-white/70 backdrop-blur-md shadow-md z-[10000]">
         <div className="container py-4 flex justify-between items-center px-4">
+          {/* Logo */}
           <h1 className={`font-bold text-2xl tracking-wide ${textColor}`}>
             BRITECH
           </h1>
@@ -67,12 +64,13 @@ const Navbar = ({ textColor = "text-black" }) => {
               ))}
             </ul>
 
-            {/* Search desktop */}
+            {/* Search (Desktop) */}
             <div className="relative">
               <button
                 type="button"
                 onPointerDown={() => setShowSearch(true)}
                 className="text-2xl text-gray-700 hover:text-secondary transition-all"
+                aria-label="Open search"
               >
                 <TbSearch />
               </button>
@@ -83,19 +81,20 @@ const Navbar = ({ textColor = "text-black" }) => {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.25 }}
+                    transition={{ duration: 0.2 }}
                     className="absolute right-0 top-10 bg-white/90 backdrop-blur-md shadow-lg border border-gray-200 rounded-full flex items-center px-4 py-2 w-72 z-[10001]"
                   >
                     <TbSearch className="text-gray-500 text-2xl mr-2" />
                     <input
                       type="text"
-                      placeholder="Search something..."
+                      placeholder="Search..."
                       className="bg-transparent outline-none text-gray-800 flex-1"
                       autoFocus
                     />
                     <TbX
                       className="text-gray-500 text-xl cursor-pointer hover:text-secondary transition"
                       onPointerDown={() => setShowSearch(false)}
+                      aria-label="Close search"
                     />
                   </motion.div>
                 )}
@@ -103,7 +102,7 @@ const Navbar = ({ textColor = "text-black" }) => {
             </div>
           </div>
 
-          {/* Mobile button: HAMBURGER ONLY (buat buka) */}
+          {/* Mobile Hamburger (OPEN ONLY) */}
           <div className="lg:hidden">
             <button
               type="button"
@@ -117,7 +116,7 @@ const Navbar = ({ textColor = "text-black" }) => {
         </div>
       </nav>
 
-      {/* Sidebar Mobile */}
+      {/* MOBILE DRAWER */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -126,12 +125,12 @@ const Navbar = ({ textColor = "text-black" }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.45 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.18 }}
               onPointerDown={() => setIsOpen(false)}
               className="fixed inset-0 bg-black z-[9999]"
             />
 
-            {/* Sidebar (swipe/drag to close) */}
+            {/* Drawer */}
             <motion.aside
               initial={{ x: -DRAWER_W }}
               animate={{ x: 0 }}
@@ -141,6 +140,8 @@ const Navbar = ({ textColor = "text-black" }) => {
               role="dialog"
               aria-modal="true"
               drag="x"
+              dragControls={dragControls}
+              dragListener={false} // ✅ penting: biar klik X/link nggak ke-drag
               dragConstraints={{ left: -DRAWER_W, right: 0 }}
               dragElastic={0.06}
               onDragEnd={(e, info) => {
@@ -150,10 +151,20 @@ const Navbar = ({ textColor = "text-black" }) => {
               }}
             >
               <div className="p-6">
+                {/* ✅ Handle swipe (drag start) */}
+                <div
+                  onPointerDown={(e) => dragControls.start(e)}
+                  className="-mt-2 mb-4 flex justify-center cursor-grab active:cursor-grabbing select-none"
+                  aria-hidden="true"
+                >
+                  <div className="h-1.5 w-12 rounded-full bg-gray-300" />
+                </div>
+
+                {/* Header drawer */}
                 <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
                   <h2 className="text-xl font-bold text-black">Menu</h2>
 
-                  {/* ✅ X cuma di sini (1x aja) */}
+                  {/* ✅ X cuma di sini (SATU AJA) */}
                   <button
                     type="button"
                     onPointerDown={(e) => {
@@ -167,6 +178,7 @@ const Navbar = ({ textColor = "text-black" }) => {
                   </button>
                 </div>
 
+                {/* Menu list */}
                 <ul className="space-y-3">
                   {NavbarMenu.map((menu, index) => (
                     <div key={menu.id}>
@@ -186,7 +198,7 @@ const Navbar = ({ textColor = "text-black" }) => {
                 </ul>
 
                 <p className="mt-6 text-xs text-gray-400">
-                  Tip: Geser ke kiri untuk menutup menu.
+                  Tip: Geser dari handle untuk menutup.
                 </p>
               </div>
             </motion.aside>
