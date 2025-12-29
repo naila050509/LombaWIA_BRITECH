@@ -19,13 +19,13 @@ const Navbar = ({ textColor = "text-black" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  // ✅ auto close saat pindah halaman (biar ga nyangkut)
+  // auto close saat pindah halaman
   useEffect(() => {
     setIsOpen(false);
     setShowSearch(false);
   }, [location.pathname]);
 
-  // ✅ lock scroll saat sidebar kebuka
+  // lock scroll saat sidebar kebuka
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
@@ -35,7 +35,7 @@ const Navbar = ({ textColor = "text-black" }) => {
 
   return (
     <>
-      {/* ✅ Edge swipe zone: geser dari kiri untuk buka */}
+      {/* Edge swipe zone: tap/drag dari kiri untuk buka */}
       {!isOpen && (
         <div
           className="fixed left-0 top-0 h-dvh w-3 z-[9999] lg:hidden"
@@ -44,14 +44,14 @@ const Navbar = ({ textColor = "text-black" }) => {
         />
       )}
 
-      {/* Navbar utama */}
+      {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full bg-white/70 backdrop-blur-md shadow-md z-[10000]">
         <div className="container py-4 flex justify-between items-center px-4">
           <h1 className={`font-bold text-2xl tracking-wide ${textColor}`}>
             BRITECH
           </h1>
 
-          {/* Menu Desktop */}
+          {/* Desktop menu */}
           <div className="hidden lg:flex items-center gap-8">
             <ul className="flex items-center gap-6">
               {NavbarMenu.map((menu) => (
@@ -67,7 +67,7 @@ const Navbar = ({ textColor = "text-black" }) => {
               ))}
             </ul>
 
-            {/* Search Desktop */}
+            {/* Search desktop */}
             <div className="relative">
               <button
                 type="button"
@@ -103,19 +103,15 @@ const Navbar = ({ textColor = "text-black" }) => {
             </div>
           </div>
 
-          {/* Tombol Menu Mobile (toggle: hamburger ↔ X) */}
+          {/* Mobile button: HAMBURGER ONLY (buat buka) */}
           <div className="lg:hidden">
             <button
               type="button"
-              onPointerDown={() => setIsOpen((v) => !v)}
+              onPointerDown={() => setIsOpen(true)}
               className="p-2 rounded-xl active:scale-95 touch-manipulation"
-              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-label="Open menu"
             >
-              {isOpen ? (
-                <IoMdClose className="text-4xl text-black" />
-              ) : (
-                <IoMdMenu className={`text-4xl ${textColor}`} />
-              )}
+              <IoMdMenu className={`text-4xl ${textColor}`} />
             </button>
           </div>
         </div>
@@ -135,7 +131,7 @@ const Navbar = ({ textColor = "text-black" }) => {
               className="fixed inset-0 bg-black z-[9999]"
             />
 
-            {/* Sidebar (✅ swipe/drag) */}
+            {/* Sidebar (swipe/drag to close) */}
             <motion.aside
               initial={{ x: -DRAWER_W }}
               animate={{ x: 0 }}
@@ -148,7 +144,6 @@ const Navbar = ({ textColor = "text-black" }) => {
               dragConstraints={{ left: -DRAWER_W, right: 0 }}
               dragElastic={0.06}
               onDragEnd={(e, info) => {
-                // swipe ke kiri cukup jauh / cepat -> tutup
                 if (info.offset.x < -90 || info.velocity.x < -700) {
                   setIsOpen(false);
                 }
@@ -157,6 +152,8 @@ const Navbar = ({ textColor = "text-black" }) => {
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
                   <h2 className="text-xl font-bold text-black">Menu</h2>
+
+                  {/* ✅ X cuma di sini (1x aja) */}
                   <button
                     type="button"
                     onPointerDown={(e) => {
@@ -188,7 +185,6 @@ const Navbar = ({ textColor = "text-black" }) => {
                   ))}
                 </ul>
 
-                {/* Hint kecil biar user tau bisa swipe */}
                 <p className="mt-6 text-xs text-gray-400">
                   Tip: Geser ke kiri untuk menutup menu.
                 </p>
