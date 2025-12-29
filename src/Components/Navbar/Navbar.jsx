@@ -92,17 +92,19 @@ const Navbar = ({ textColor = "text-black" }) => {
             </div>
           </div>
 
-          {/* Tombol Menu Mobile */}
+          {/* Tombol Menu Mobile (toggle) */}
           <div className="lg:hidden">
-            {!isOpen && (
-              <button
-                onClick={() => setIsOpen(true)}
-                className="p-2 rounded-xl active:scale-95 touch-manipulation"
-                aria-label="Open menu"
-              >
+            <button
+              onClick={() => setIsOpen((v) => !v)}
+              className="p-2 rounded-xl active:scale-95 touch-manipulation"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+            >
+              {isOpen ? (
+                <IoMdClose className="text-4xl text-black" />
+              ) : (
                 <IoMdMenu className={`text-4xl ${textColor}`} />
-              </button>
-            )}
+              )}
+            </button>
           </div>
         </div>
       </nav>
