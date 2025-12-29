@@ -1,45 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdMenu, IoMdClose } from "react-icons/io";
 import { TbSearch, TbX } from "react-icons/tb";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const NavbarMenu = [
-  {
-    id: 1,
-    title: "Home",
-    link: "/",
-  },
-  {
-    id: 2,
-    title: "Maps",
-    link: "/Maps",
-  },
-  {
-    id: 3,
-    title: "Categories",
-    link: "/Categories",
-  },
-  {
-    id: 4,
-    title: "About Us",
-    link: "/AboutUs",
-  },
-  {
-    id: 5,
-    title: "Contact",
-    link: "/Contact",
-  },
+  { id: 1, title: "Home", link: "/" },
+  { id: 2, title: "Maps", link: "/Maps" },
+  { id: 3, title: "Categories", link: "/Categories" },
+  { id: 4, title: "About Us", link: "/AboutUs" },
+  { id: 5, title: "Contact", link: "/Contact" },
 ];
 
 const Navbar = ({ textColor = "text-black" }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  // ✅ Auto close menu setiap ganti halaman (biar ga nyangkut)
+  useEffect(() => {
+    setIsOpen(false);
+    setShowSearch(false);
+  }, [location.pathname]);
+
+  // ✅ Lock scroll saat drawer kebuka (mobile jadi lebih stabil)
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   return (
     <>
       {/* Navbar utama */}
-      <nav className="fixed top-0 left-0 w-full bg-white/70 backdrop-blur-md shadow-md z-50">
+      <nav className="fixed top-0 left-0 w-full bg-white/70 backdrop-blur-md shadow-md z-[9999]">
         <div className="container py-4 flex justify-between items-center px-4">
           {/* Logo */}
           <h1 className={`font-bold text-2xl tracking-wide ${textColor}`}>
@@ -55,14 +50,14 @@ const Navbar = ({ textColor = "text-black" }) => {
                     to={menu.link}
                     className={`inline-block py-2 px-3 hover:text-secondary ${textColor} relative group`}
                   >
-                    <div className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-secondary rounded-full transition-all duration-500 ease-in-out group-hover:left-0 group-hover:w-full"></div>
+                    <div className="absolute left-1/2 bottom-0 h-[2px] w-0 bg-secondary rounded-full transition-all duration-500 ease-in-out group-hover:left-0 group-hover:w-full" />
                     {menu.title}
                   </Link>
                 </li>
               ))}
             </ul>
 
-            {/* Search */}
+            {/* Search Desktop */}
             <div className="relative">
               <button
                 onClick={() => setShowSearch(true)}
@@ -77,8 +72,8 @@ const Navbar = ({ textColor = "text-black" }) => {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute right-0 top-10 bg-white/80 backdrop-blur-md shadow-lg border border-gray-200 rounded-full flex items-center px-4 py-2 w-72"
+                    transition={{ duration: 0.25 }}
+                    className="absolute right-0 top-10 bg-white/90 backdrop-blur-md shadow-lg border border-gray-200 rounded-full flex items-center px-4 py-2 w-72 z-[9999]"
                   >
                     <TbSearch className="text-gray-500 text-2xl mr-2" />
                     <input
@@ -98,9 +93,13 @@ const Navbar = ({ textColor = "text-black" }) => {
           </div>
 
           {/* Tombol Menu Mobile */}
-          <div className="lg:hidden z-[60]">
+          <div className="lg:hidden">
             {!isOpen && (
-              <button onClick={() => setIsOpen(true)}>
+              <button
+                onClick={() => setIsOpen(true)}
+                className="p-2 rounded-xl active:scale-95 touch-manipulation"
+                aria-label="Open menu"
+              >
                 <IoMdMenu className={`text-4xl ${textColor}`} />
               </button>
             )}
@@ -115,43 +114,52 @@ const Navbar = ({ textColor = "text-black" }) => {
             {/* Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
+              animate={{ opacity: 0.45 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.2 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black z-[60]"
-            ></motion.div>
+              className="fixed inset-0 bg-black z-[9998]"
+            />
 
             {/* Sidebar */}
             <motion.aside
-              initial={{ x: -300 }}
+              initial={{ x: -320 }}
               animate={{ x: 0 }}
-              exit={{ x: -300 }}
-              transition={{ duration: 0.3 }}
-              className="fixed top-0 left-0 h-full w-64 bg-white text-black z-[70] shadow-2xl"
+              exit={{ x: -320 }}
+              transition={{ duration: 0.22 }}
+              className="fixed top-0 left-0 h-dvh w-72 max-w-[85vw] bg-white text-black z-[9999] shadow-2xl pointer-events-auto"
+              role="dialog"
+              aria-modal="true"
             >
               <div className="p-6">
-                <div className="flex justify-between items-center mb-6 border-b border-gray-300 pb-3">
+                <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
                   <h2 className="text-xl font-bold text-black">Menu</h2>
-                  <button onClick={() => setIsOpen(false)}>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsOpen(false);
+                    }}
+                    className="p-2 rounded-xl hover:bg-gray-100 active:scale-95 touch-manipulation"
+                    aria-label="Close menu"
+                  >
                     <IoMdClose className="text-3xl text-black" />
                   </button>
                 </div>
 
-                <ul className="space-y-4">
+                <ul className="space-y-3">
                   {NavbarMenu.map((menu, index) => (
                     <div key={menu.id}>
                       <Link
                         to={menu.link}
                         onClick={() => setIsOpen(false)}
-                        className="block text-black hover:text-yellow-600 transition-colors text-lg font-medium"
+                        className="block text-black hover:text-yellow-600 transition-colors text-lg font-medium py-2"
                       >
                         {menu.title}
                       </Link>
 
-                      {/* Garis pemisah antar menu */}
                       {index < NavbarMenu.length - 1 && (
-                        <hr className="my-2 border-gray-300" />
+                        <hr className="border-gray-200" />
                       )}
                     </div>
                   ))}
