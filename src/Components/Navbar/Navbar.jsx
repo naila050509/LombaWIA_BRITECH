@@ -17,13 +17,13 @@ const Navbar = ({ textColor = "text-black" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  // ✅ Auto close saat pindah route (mencegah "nyangkut")
+  // ✅ auto close saat pindah halaman (biar ga nyangkut)
   useEffect(() => {
     setIsOpen(false);
     setShowSearch(false);
   }, [location.pathname]);
 
-  // ✅ Lock scroll saat drawer kebuka (mobile lebih stabil)
+  // ✅ lock scroll saat sidebar kebuka
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
@@ -36,7 +36,6 @@ const Navbar = ({ textColor = "text-black" }) => {
       {/* Navbar utama */}
       <nav className="fixed top-0 left-0 w-full bg-white/70 backdrop-blur-md shadow-md z-[10000]">
         <div className="container py-4 flex justify-between items-center px-4">
-          {/* Logo */}
           <h1 className={`font-bold text-2xl tracking-wide ${textColor}`}>
             BRITECH
           </h1>
@@ -61,7 +60,7 @@ const Navbar = ({ textColor = "text-black" }) => {
             <div className="relative">
               <button
                 type="button"
-                onClick={() => setShowSearch(true)}
+                onPointerDown={() => setShowSearch(true)}
                 className="text-2xl text-gray-700 hover:text-secondary transition-all"
               >
                 <TbSearch />
@@ -85,7 +84,7 @@ const Navbar = ({ textColor = "text-black" }) => {
                     />
                     <TbX
                       className="text-gray-500 text-xl cursor-pointer hover:text-secondary transition"
-                      onClick={() => setShowSearch(false)}
+                      onPointerDown={() => setShowSearch(false)}
                     />
                   </motion.div>
                 )}
@@ -131,15 +130,13 @@ const Navbar = ({ textColor = "text-black" }) => {
               animate={{ x: 0 }}
               exit={{ x: -320 }}
               transition={{ duration: 0.22 }}
-              className="fixed top-0 left-0 h-dvh w-72 max-w-[85vw] bg-white text-black z-[10001] shadow-2xl"
+              className="fixed top-0 left-0 h-dvh w-72 max-w-[85vw] bg-white text-black z-[10001] shadow-2xl pointer-events-auto"
               role="dialog"
               aria-modal="true"
             >
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6 border-b border-gray-200 pb-3">
                   <h2 className="text-xl font-bold text-black">Menu</h2>
-
-                  {/* X di dalam drawer (opsional) */}
                   <button
                     type="button"
                     onPointerDown={(e) => {
